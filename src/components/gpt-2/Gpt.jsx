@@ -15,7 +15,6 @@ function Gpt({ textToBeExtracted }) {
   useEffect(() => {
     const loadModel = async () => {
       setLoading(true);
-
       const cachedModel = localStorage.getItem('model');
       if (cachedModel) {
         setModel(JSON.parse(cachedModel));
@@ -32,11 +31,11 @@ function Gpt({ textToBeExtracted }) {
       } catch (error) {
         console.error("Error loading model:", error);
         setResponse("Error loading model. Please check your connection.");
-        
-       
+
         if (retryCount < 3) {
           setRetryCount((prevCount) => prevCount + 1);
           setTimeout(loadModel, 3000);
+          return;
         } else {
           setResponse("Failed to load model after multiple attempts.");
         }
