@@ -43,6 +43,7 @@ function Gpt({ textToBeExtracted }) {
       setResponse("Error Finding Answer. Please elaborate the question.");
     } finally {
       setLoading(false);
+      setQuestion('')
     }
   };
 
