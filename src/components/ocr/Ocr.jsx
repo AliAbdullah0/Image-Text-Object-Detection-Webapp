@@ -45,7 +45,7 @@ const TextExtractor = () => {
       </div>
       <div>
       {extractedText && (
-        <div className="mt-4">
+        <div className="mt-4 w-full text-center">
           <p className="text-green-400 font-bold">Extracted Text:</p>
           {/* <p className="text-white first-letter:capitalize">{extractedText}</p> */}
           {

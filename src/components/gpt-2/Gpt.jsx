@@ -1,51 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import * as qna from "@tensorflow-models/qna";
-import "@tensorflow/tfjs";
+import axios from "axios"; // Import axios for HTTP requests
 
 function Gpt({ textToBeExtracted }) {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
-  const [model, setModel] = useState(null);
   const [context, setContext] = useState("");
   const [question, setQuestion] = useState("");
   const [retryCount, setRetryCount] = useState(0); // Retry counter
 
   const inputRef = useRef(null);
-
-  useEffect(() => {
-    const loadModel = async () => {
-      setLoading(true);
-      const cachedModel = localStorage.getItem('model');
-      if (cachedModel) {
-        setModel(JSON.parse(cachedModel));
-        console.log("Model loaded from cache!");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const loadedModel = await qna.load();
-        setModel(loadedModel);
-        localStorage.setItem('model', JSON.stringify(loadedModel));
-        console.log("Model loaded from network!");
-      } catch (error) {
-        console.error("Error loading model:", error);
-        setResponse("Error loading model. Please check your connection.");
-
-        if (retryCount < 3) {
-          setRetryCount((prevCount) => prevCount + 1);
-          setTimeout(loadModel, 3000);
-          return;
-        } else {
-          setResponse("Failed to load model after multiple attempts.");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadModel();
-  }, [retryCount]);
 
   useEffect(() => {
     if (textToBeExtracted) {
@@ -54,12 +17,27 @@ function Gpt({ textToBeExtracted }) {
   }, [textToBeExtracted]);
 
   const handleQuestionSubmit = async () => {
-    if (!model || !context || !question) return;
+    if (!context || !question) return;
 
     setLoading(true);
     try {
-      const answers = await model.findAnswers(question, context);
-      setResponse(answers.length > 0 ? answers[0].text : "No answer found.");
+      const response = await axios.post(
+        "https://api-inference.huggingface.co/models/deepset/roberta-base-squad2",
+        {
+          inputs: {
+            question: question,
+            context: context,
+          },
+        },
+        {
+          headers: {
+            Authorization: `Bearer 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`, // Replace with your Hugging Face API key
+          },
+        }
+      );
+      
+      const answer = response.data.answer || "No answer found.";
+      setResponse(answer);
     } catch (error) {
       console.error("Error finding the answer:", error);
       setResponse("An error occurred. Please try again.");
@@ -78,24 +56,15 @@ function Gpt({ textToBeExtracted }) {
         </div>
       )}
 
-      {!model && !loading && (
-        <div className="flex flex-col items-center">
-          <p className="text-red-500">Failed to load model. Check your connection.</p>
-          <button onClick={() => setRetryCount(0)} className="px-4 py-2 bg-indigo-400 text-white rounded">
-            Retry
-          </button>
-        </div>
-      )}
-
-      {model && (
-        <div className="space-y-4">
-          <div>
+      {!loading && (
+        <div className="space-y-4 w-screen flex flex-col items-center justify-center">
+          <div className="w-1/3">
             <textarea
               value={context}
               onChange={(e) => setContext(e.target.value)}
               placeholder="Enter context..."
               rows="6"
-              className="w-full p-2 bg-gray-950 border-2 border-indigo-200 text-cyan-100 rounded-lg"
+              className="w-full p-2 bg-gray-950 outline-none text-cyan-100 rounded-lg"
             ></textarea>
           </div>
 
@@ -105,7 +74,7 @@ function Gpt({ textToBeExtracted }) {
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Ask a question..."
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 outline-none bg-transparent border-2 border-double border-purple-400 text-cyan-300 rounded-lg"
             />
           </div>
 
