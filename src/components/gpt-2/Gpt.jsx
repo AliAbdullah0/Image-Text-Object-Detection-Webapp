@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios"; // Import axios for HTTP requests
+import axios from "axios"; 
 
 function Gpt({ textToBeExtracted }) {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
   const [context, setContext] = useState("");
   const [question, setQuestion] = useState("");
-  const [retryCount, setRetryCount] = useState(0); // Retry counter
+  const [retryCount, setRetryCount] = useState(0); 
 
   const inputRef = useRef(null);
 
@@ -31,7 +31,7 @@ function Gpt({ textToBeExtracted }) {
         },
         {
           headers: {
-            Authorization: `Bearer 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`, // Replace with your Hugging Face API key
+            Authorization: `Bearer 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`,
           },
         }
       );
@@ -40,7 +40,7 @@ function Gpt({ textToBeExtracted }) {
       setResponse(answer);
     } catch (error) {
       console.error("Error finding the answer:", error);
-      setResponse("An error occurred. Please try again.");
+      setResponse("Error Finding Answer. Please elaborate the question.");
     } finally {
       setLoading(false);
     }
@@ -89,9 +89,9 @@ function Gpt({ textToBeExtracted }) {
           </div>
 
           {response && (
-            <div className="p-2 bg-green-100 rounded">
+            <div className="p-2 bg-green-200 rounded">
               <p className="font-bold">Answer:</p>
-              <p>{response}</p>
+              <p className="first-letter:capitalize">{response}</p>
             </div>
           )}
         </div>
