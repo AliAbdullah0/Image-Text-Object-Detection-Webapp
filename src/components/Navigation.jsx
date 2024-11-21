@@ -84,7 +84,7 @@ function Navigation() {
             </ul>
             <div>
               <button className='p-2'>
-                <Link target='_blank' to='https://github.com/AliAbdullah0/FBISE-Project-main'>
+                <Link target='_blank' to='https://github.com/AliAbdullah0/Image-Text-Object-Detection-Webapp'>
                   <img src="src\assets\social.png" alt="GitHub" className='h-7' />
                 </Link>
               </button>
