@@ -3,12 +3,16 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
+    "homepage":"https://AliAbdullah0.github.io/Image-Text-Object-Detection-Webapp"
+    ,
     "scripts": {
         "dev": "vite",
         "build": "vite build",
+        "predeploy": "vite build",
+        "deploy": "gh-pages -d dist",
         "lint": "eslint .",
         "preview": "vite preview"
-    },
+      },      
     "dependencies": {
         "@huggingface/transformers": "^3.0.0-alpha.14",
         "@tensorflow-models/coco-ssd": "^2.2.3",
