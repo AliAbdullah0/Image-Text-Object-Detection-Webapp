@@ -3,7 +3,8 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "homepage":"https://AliAbdullah0.github.io/Image-Text-Object-Detection-Webapp"
+    "homepage": "https://aliabdullah0.github.io/Image-Text-Object-Detection-Webapp"
+
     ,
     "scripts": {
         "dev": "vite",
